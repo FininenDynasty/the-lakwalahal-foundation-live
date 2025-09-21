@@ -6,6 +6,10 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { foundationData } from '../data/mock';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Contact = () => {
   const { contact } = foundationData;
@@ -17,19 +21,41 @@ const Contact = () => {
     message: '',
     interest: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock form submission
-    alert('Thank you for your message! We will get back to you within 24 hours.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: '',
-      interest: ''
-    });
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      const response = await axios.post(`${API}/contact`, {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        subject: formData.subject,
+        message: formData.message,
+        interest: formData.interest || null
+      });
+
+      if (response.data.success) {
+        setSubmitMessage(response.data.message);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+          interest: ''
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      setSubmitMessage('Sorry, there was an error sending your message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
