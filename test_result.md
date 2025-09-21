@@ -161,6 +161,9 @@ backend:
       - working: true
         agent: "main"
         comment: "Admin endpoints created for viewing contact submissions and newsletter subscribers. Fixed ObjectId serialization issues."
+      - working: true
+        agent: "testing"
+        comment: "Admin endpoints tested successfully: ✅ /api/contact-submissions endpoint working - returns proper JSON with success, submissions array, and count ✅ /api/newsletter-subscribers endpoint working - returns proper JSON with success, subscribers array, and count ✅ Query parameters working (limit, status filtering) ✅ Data retrieval verified with actual stored records ✅ JSON serialization working correctly ✅ All test cases passed (2/2)"
 
 frontend:
   - task: "Professional Foundation Website Layout"
