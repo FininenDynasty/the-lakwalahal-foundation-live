@@ -227,10 +227,21 @@ const Contact = () => {
                 <Button 
                   type="submit"
                   size="lg"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300"
+                  disabled={isSubmitting}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
+                
+                {submitMessage && (
+                  <div className={`mt-4 p-4 rounded-lg ${
+                    submitMessage.includes('error') || submitMessage.includes('Sorry') 
+                      ? 'bg-red-100 text-red-800 border border-red-200' 
+                      : 'bg-green-100 text-green-800 border border-green-200'
+                  }`}>
+                    {submitMessage}
+                  </div>
+                )}
               </form>
             </CardContent>
           </Card>
