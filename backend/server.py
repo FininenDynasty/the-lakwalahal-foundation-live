@@ -188,6 +188,12 @@ async def get_newsletter_subscribers(limit: int = 100):
     """Get newsletter subscribers (admin endpoint)"""
     try:
         subscribers = await db.newsletter_subscribers.find({"status": "active"}).sort("subscribed_at", -1).limit(limit).to_list(limit)
+        
+        # Convert ObjectId to string for JSON serialization
+        for subscriber in subscribers:
+            if '_id' in subscriber:
+                subscriber['_id'] = str(subscriber['_id'])
+        
         return {
             "success": True,
             "subscribers": subscribers,
