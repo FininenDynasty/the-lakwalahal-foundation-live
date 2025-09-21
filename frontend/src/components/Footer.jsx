@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Heart, Mail, Phone, MapPin } from 'lucide-react';
 import { foundationData } from '../data/mock';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Footer = () => {
   const { contact } = foundationData;
+  const [email, setEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscribeMessage, setSubscribeMessage] = useState('');
 
   return (
     <footer className="bg-slate-900 text-white">
