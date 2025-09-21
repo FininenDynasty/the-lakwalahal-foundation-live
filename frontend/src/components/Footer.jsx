@@ -69,16 +69,35 @@ const Footer = () => {
           <div className="text-center">
             <h4 className="text-xl font-bold mb-4">Join Our Sacred Circle</h4>
             <p className="text-slate-300 mb-6">Sign up to receive updates, blessings, and community calls to action</p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-                Subscribe
-              </button>
-            </div>
+            <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isSubscribing}
+                  className="flex-1 px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                />
+                <button 
+                  type="submit"
+                  disabled={isSubscribing}
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubscribing ? 'Subscribing...' : 'Subscribe'}
+                </button>
+              </div>
+              {subscribeMessage && (
+                <div className={`mt-4 p-3 rounded-lg text-sm ${
+                  subscribeMessage.includes('error') || subscribeMessage.includes('Sorry') 
+                    ? 'bg-red-100 text-red-800' 
+                    : 'bg-green-100 text-green-800'
+                }`}>
+                  {subscribeMessage}
+                </div>
+              )}
+            </form>
           </div>
         </div>
         
