@@ -168,6 +168,12 @@ async def get_contact_submissions(limit: int = 50, status: Optional[ContactStatu
             query["status"] = status
             
         submissions = await db.contact_submissions.find(query).sort("created_at", -1).limit(limit).to_list(limit)
+        
+        # Convert ObjectId to string for JSON serialization
+        for submission in submissions:
+            if '_id' in submission:
+                submission['_id'] = str(submission['_id'])
+        
         return {
             "success": True,
             "submissions": submissions,
