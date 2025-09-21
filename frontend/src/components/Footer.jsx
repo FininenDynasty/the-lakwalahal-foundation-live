@@ -12,6 +12,28 @@ const Footer = () => {
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscribeMessage, setSubscribeMessage] = useState('');
 
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubscribing(true);
+    setSubscribeMessage('');
+
+    try {
+      const response = await axios.post(`${API}/newsletter`, {
+        email: email
+      });
+
+      if (response.data.success) {
+        setSubscribeMessage(response.data.message);
+        setEmail('');
+      }
+    } catch (error) {
+      console.error('Error subscribing to newsletter:', error);
+      setSubscribeMessage('Sorry, there was an error subscribing. Please try again later.');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   return (
     <footer className="bg-slate-900 text-white">
       <div className="max-w-7xl mx-auto px-6 py-16">
