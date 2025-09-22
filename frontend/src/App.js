@@ -11,6 +11,7 @@ import Donation from "./components/Donation";
 import Events from "./components/Events";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Admin from "./components/admin/Admin";
 
 const Home = () => {
   return (
@@ -35,6 +36,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
     </div>
