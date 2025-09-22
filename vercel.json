@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "lakwalahal-foundation",
+  "builds": [
+    {
+      "src": "frontend/build/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/build/$1"
+    }
+  ]
+}
