@@ -158,6 +158,10 @@ async def submit_contact_form(contact_data: ContactSubmissionCreate):
         result = await db.contact_submissions.insert_one(submission.dict())
         
         if result.inserted_id:
+            # TODO: Send email notification to info@lakwalahalfoundation.org
+            # This will be implemented when email service is configured
+            logging.info(f"New contact submission from {submission.email}: {submission.subject}")
+            
             return {
                 "success": True,
                 "message": "Thank you for your message! We will get back to you within 24 hours.",
