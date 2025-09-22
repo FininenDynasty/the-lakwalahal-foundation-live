@@ -1,33 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
-import { Heart, Shield, Users, Calendar } from 'lucide-react';
+import { Heart, Shield, Users, Calendar, CreditCard, DollarSign } from 'lucide-react';
 
 const Donation = () => {
+  const [selectedAmount, setSelectedAmount] = useState(null);
+  const [customAmount, setCustomAmount] = useState('');
+  const [donationType, setDonationType] = useState('one-time');
+
+  const suggestedAmounts = [25, 50, 100, 250, 500];
+
+  const handleDonateClick = () => {
+    const amount = selectedAmount || parseFloat(customAmount);
+    if (amount && amount > 0) {
+      // TODO: Integrate with payment processor (Stripe/PayPal)
+      alert(`Thank you for your intention to donate $${amount}! Payment processing will be available once our 501(c)(3) status is approved.`);
+    } else {
+      alert('Please select or enter a donation amount.');
+    }
+  };
+
   const ways = [
     {
       icon: Heart,
       title: "Monthly Giving",
       description: "Provide ongoing support with a recurring monthly donation",
-      cta: "Start Monthly Gift"
+      cta: "Start Monthly Gift",
+      action: () => setDonationType('monthly')
     },
     {
       icon: Shield,
       title: "One-Time Donation", 
       description: "Make a single donation to support our current programs",
-      cta: "Donate Now"
+      cta: "Donate Now",
+      action: () => setDonationType('one-time')
     },
     {
       icon: Users,
       title: "Volunteer",
       description: "Share your time and skills to directly impact our community",
-      cta: "Join Our Team"
+      cta: "Join Our Team",
+      action: () => window.location.href = '#contact'
     },
     {
       icon: Calendar,
       title: "Corporate Partnership",
       description: "Partner with us for ongoing community impact initiatives",
-      cta: "Learn More"
+      cta: "Learn More",
+      action: () => window.location.href = '#contact'
     }
   ];
 
