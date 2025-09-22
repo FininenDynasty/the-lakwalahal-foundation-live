@@ -32,6 +32,16 @@ app = FastAPI(title="Lakwalahal Foundation API")
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Security
+security = HTTPBearer()
+SECRET_KEY = "lakwalahal_foundation_admin_secret_2024"
+ALGORITHM = "HS256"
+
+# Admin credentials - In production, store these securely
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD_HASH = hashlib.sha256("LakwalahalAdmin2024!".encode()).hexdigest()
+ADMIN_PASSWORD_PLAIN = "LakwalahalAdmin2024!"  # Will show this to user
+
 
 # Enums
 class InterestType(str, Enum):
