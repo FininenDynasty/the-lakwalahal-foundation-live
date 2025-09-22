@@ -273,6 +273,219 @@ async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
 
+# Admin Authentication Endpoints
+@api_router.post("/admin/login", response_model=AdminLoginResponse)
+async def admin_login(login_data: AdminLogin):
+    """Admin login endpoint"""
+    password_hash = hashlib.sha256(login_data.password.encode()).hexdigest()
+    
+    if login_data.username == ADMIN_USERNAME and password_hash == ADMIN_PASSWORD_HASH:
+        access_token = create_access_token(data={"sub": login_data.username})
+        return AdminLoginResponse(
+            success=True,
+            token=access_token,
+            message="Login successful"
+        )
+    else:
+        return AdminLoginResponse(
+            success=False,
+            message="Invalid credentials"
+        )
+
+@api_router.get("/admin/verify")
+async def verify_admin(current_user: str = Depends(verify_admin_token)):
+    """Verify admin token"""
+    return {"success": True, "user": current_user}
+
+# Admin Dashboard Endpoints
+@api_router.get("/admin/dashboard")
+async def get_admin_dashboard(current_user: str = Depends(verify_admin_token)):
+    """Get dashboard statistics"""
+    try:
+        # Get counts
+        total_contacts = await db.contact_submissions.count_documents({})
+        new_contacts = await db.contact_submissions.count_documents({"status": "new"})
+        total_subscribers = await db.newsletter_subscribers.count_documents({"status": "active"})
+        
+        # Get recent contacts
+        recent_contacts = await db.contact_submissions.find().sort("created_at", -1).limit(5).to_list(5)
+        for contact in recent_contacts:
+            if '_id' in contact:
+                contact['_id'] = str(contact['_id'])
+        
+        # Get recent subscribers
+        recent_subscribers = await db.newsletter_subscribers.find({"status": "active"}).sort("subscribed_at", -1).limit(5).to_list(5)
+        for subscriber in recent_subscribers:
+            if '_id' in subscriber:
+                subscriber['_id'] = str(subscriber['_id'])
+        
+        return {
+            "success": True,
+            "stats": {
+                "total_contacts": total_contacts,
+                "new_contacts": new_contacts,
+                "total_subscribers": total_subscribers
+            },
+            "recent_contacts": recent_contacts,
+            "recent_subscribers": recent_subscribers
+        }
+    except Exception as e:
+        logging.error(f"Error fetching dashboard data: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.get("/admin/contact-submissions")
+async def get_admin_contact_submissions(
+    current_user: str = Depends(verify_admin_token),
+    limit: int = 100,
+    status: Optional[ContactStatus] = None,
+    search: Optional[str] = None
+):
+    """Get contact submissions with filtering (admin endpoint)"""
+    try:
+        query = {}
+        if status:
+            query["status"] = status
+        if search:
+            query["$or"] = [
+                {"name": {"$regex": search, "$options": "i"}},
+                {"email": {"$regex": search, "$options": "i"}},
+                {"subject": {"$regex": search, "$options": "i"}}
+            ]
+            
+        submissions = await db.contact_submissions.find(query).sort("created_at", -1).limit(limit).to_list(limit)
+        
+        # Convert ObjectId to string for JSON serialization
+        for submission in submissions:
+            if '_id' in submission:
+                submission['_id'] = str(submission['_id'])
+        
+        return {
+            "success": True,
+            "submissions": submissions,
+            "count": len(submissions)
+        }
+    except Exception as e:
+        logging.error(f"Error fetching contact submissions: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.put("/admin/contact-submissions/{submission_id}")
+async def update_contact_submission(
+    submission_id: str,
+    update_data: ContactSubmissionUpdate,
+    current_user: str = Depends(verify_admin_token)
+):
+    """Update contact submission status"""
+    try:
+        result = await db.contact_submissions.update_one(
+            {"id": submission_id},
+            {"$set": {"status": update_data.status, "updated_at": datetime.utcnow()}}
+        )
+        
+        if result.modified_count > 0:
+            return {"success": True, "message": "Submission updated successfully"}
+        else:
+            raise HTTPException(status_code=404, detail="Submission not found")
+    except Exception as e:
+        logging.error(f"Error updating contact submission: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.get("/admin/newsletter-subscribers")
+async def get_admin_newsletter_subscribers(
+    current_user: str = Depends(verify_admin_token),
+    limit: int = 100,
+    search: Optional[str] = None
+):
+    """Get newsletter subscribers with filtering (admin endpoint)"""
+    try:
+        query = {"status": "active"}
+        if search:
+            query["email"] = {"$regex": search, "$options": "i"}
+            
+        subscribers = await db.newsletter_subscribers.find(query).sort("subscribed_at", -1).limit(limit).to_list(limit)
+        
+        # Convert ObjectId to string for JSON serialization
+        for subscriber in subscribers:
+            if '_id' in subscriber:
+                subscriber['_id'] = str(subscriber['_id'])
+        
+        return {
+            "success": True,
+            "subscribers": subscribers,
+            "count": len(subscribers)
+        }
+    except Exception as e:
+        logging.error(f"Error fetching newsletter subscribers: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.get("/admin/export/contacts")
+async def export_contacts_csv(current_user: str = Depends(verify_admin_token)):
+    """Export contact submissions to CSV"""
+    try:
+        submissions = await db.contact_submissions.find().sort("created_at", -1).to_list(1000)
+        
+        # Create CSV
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Write header
+        writer.writerow(['Name', 'Email', 'Phone', 'Subject', 'Message', 'Interest', 'Status', 'Created At'])
+        
+        # Write data
+        for submission in submissions:
+            writer.writerow([
+                submission.get('name', ''),
+                submission.get('email', ''),
+                submission.get('phone', ''),
+                submission.get('subject', ''),
+                submission.get('message', ''),
+                submission.get('interest', ''),
+                submission.get('status', ''),
+                submission.get('created_at', '')
+            ])
+        
+        output.seek(0)
+        
+        return StreamingResponse(
+            io.BytesIO(output.getvalue().encode()),
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=contact_submissions.csv"}
+        )
+    except Exception as e:
+        logging.error(f"Error exporting contacts: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.get("/admin/export/subscribers")
+async def export_subscribers_csv(current_user: str = Depends(verify_admin_token)):
+    """Export newsletter subscribers to CSV"""
+    try:
+        subscribers = await db.newsletter_subscribers.find({"status": "active"}).sort("subscribed_at", -1).to_list(1000)
+        
+        # Create CSV
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Write header
+        writer.writerow(['Email', 'Status', 'Subscribed At'])
+        
+        # Write data
+        for subscriber in subscribers:
+            writer.writerow([
+                subscriber.get('email', ''),
+                subscriber.get('status', ''),
+                subscriber.get('subscribed_at', '')
+            ])
+        
+        output.seek(0)
+        
+        return StreamingResponse(
+            io.BytesIO(output.getvalue().encode()),
+            media_type="text/csv",  
+            headers={"Content-Disposition": "attachment; filename=newsletter_subscribers.csv"}
+        )
+    except Exception as e:
+        logging.error(f"Error exporting subscribers: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 # Include the router in the main app
 app.include_router(api_router)
 
