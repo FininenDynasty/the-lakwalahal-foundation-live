@@ -67,6 +67,103 @@ const Donation = () => {
           </div>
         </div>
         
+        {/* Donation Amount Selection */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <Card className="bg-white/10 backdrop-blur-sm border border-white/20">
+            <CardContent className="p-8">
+              <div className="text-center mb-8">
+                <DollarSign className="w-12 h-12 text-white mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-white mb-4">Make a Direct Impact</h3>
+                <p className="text-blue-100">Every donation helps us continue our mission of healing and protection</p>
+              </div>
+
+              {/* Donation Type Toggle */}
+              <div className="flex justify-center mb-8">
+                <div className="bg-white/20 rounded-full p-1">
+                  <button
+                    onClick={() => setDonationType('one-time')}
+                    className={`px-6 py-2 rounded-full transition-all ${
+                      donationType === 'one-time' 
+                        ? 'bg-white text-blue-800 font-semibold' 
+                        : 'text-white hover:bg-white/10'
+                    }`}
+                  >
+                    One-Time
+                  </button>
+                  <button
+                    onClick={() => setDonationType('monthly')}
+                    className={`px-6 py-2 rounded-full transition-all ${
+                      donationType === 'monthly' 
+                        ? 'bg-white text-blue-800 font-semibold' 
+                        : 'text-white hover:bg-white/10'
+                    }`}
+                  >
+                    Monthly
+                  </button>
+                </div>
+              </div>
+
+              {/* Amount Selection */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                {suggestedAmounts.map((amount) => (
+                  <button
+                    key={amount}
+                    onClick={() => {
+                      setSelectedAmount(amount);
+                      setCustomAmount('');
+                    }}
+                    className={`p-4 rounded-lg border-2 transition-all ${
+                      selectedAmount === amount
+                        ? 'border-white bg-white text-blue-800 font-bold'
+                        : 'border-white/30 text-white hover:border-white/50 hover:bg-white/10'
+                    }`}
+                  >
+                    ${amount}
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Amount */}
+              <div className="mb-8">
+                <div className="max-w-xs mx-auto">
+                  <label className="block text-white mb-2 text-center">Or enter custom amount:</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600">$</span>
+                    <input
+                      type="number"
+                      value={customAmount}
+                      onChange={(e) => {
+                        setCustomAmount(e.target.value);
+                        setSelectedAmount(null);
+                      }}
+                      placeholder="0.00"
+                      className="w-full pl-8 pr-4 py-3 rounded-lg border border-white/30 bg-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      min="1"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Donate Button */}
+              <div className="text-center">
+                <Button
+                  onClick={handleDonateClick}
+                  size="lg"
+                  className="bg-white text-blue-800 hover:bg-blue-50 px-12 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <CreditCard className="w-5 h-5 mr-2" />
+                  Donate {donationType === 'monthly' ? 'Monthly' : 'Now'}
+                  {(selectedAmount || customAmount) && ` $${selectedAmount || customAmount}`}
+                </Button>
+                <p className="text-white/80 text-sm mt-4">
+                  Secure donation processing • 501(c)(3) status pending
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {ways.map((way, index) => {
             const Icon = way.icon;
@@ -83,6 +180,7 @@ const Donation = () => {
                     {way.description}
                   </p>
                   <Button 
+                    onClick={way.action}
                     variant="outline" 
                     className="border-white/50 text-white hover:bg-white hover:text-blue-800 transition-all duration-300 w-full"
                   >
