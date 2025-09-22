@@ -1,0 +1,33 @@
+DEPLOYMENT INSTRUCTIONS FOR LAKWALAHAL FOUNDATION WEBSITE
+
+=== FRONTEND DEPLOYMENT ===
+
+Option A: Manual Upload to Vercel
+1. Download the build folder from /app/frontend/build/
+2. In Vercel dashboard, click "New Project"
+3. Choose "Browse all templates" then "Static Sites"
+4. Upload the build folder contents
+5. Deploy
+
+Option B: Using Vercel CLI (Recommended)
+1. Install Vercel CLI: npm i -g vercel
+2. Navigate to /app/frontend/build/
+3. Run: vercel --prod
+4. Follow prompts
+
+=== BACKEND DEPLOYMENT ===
+
+The backend needs to be deployed separately:
+1. In Vercel, create new project
+2. Upload backend folder contents
+3. Vercel will auto-detect Python/FastAPI
+
+=== DOMAIN CONNECTION ===
+
+After deployment:
+1. In Vercel project settings
+2. Go to Domains tab
+3. Add your purchased domain
+4. Follow DNS setup instructions
+
+Contact: Ready to help with each step!
