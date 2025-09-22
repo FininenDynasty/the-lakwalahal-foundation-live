@@ -127,9 +127,9 @@ const Footer = () => {
         <div className="border-t border-slate-700 mt-8 pt-8 text-center text-slate-400">
           <p>&copy; 2024 The Lakwalahal Foundation. All rights reserved.</p>
           <div className="mt-2 space-x-4 text-sm">
-            <a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a>
+            <a href="/privacy" className="hover:text-blue-400 transition-colors">Privacy Policy</a>
             <span>|</span>
-            <a href="#" className="hover:text-blue-400 transition-colors">Terms of Service</a>
+            <a href="/terms" className="hover:text-blue-400 transition-colors">Terms of Service</a>
             <span>|</span>
             <a href="#" className="hover:text-blue-400 transition-colors">Transparency</a>
           </div>
