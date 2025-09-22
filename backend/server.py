@@ -100,6 +100,18 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+class AdminLogin(BaseModel):
+    username: str
+    password: str
+
+class AdminLoginResponse(BaseModel):
+    success: bool
+    token: Optional[str] = None
+    message: str
+
+class ContactSubmissionUpdate(BaseModel):
+    status: ContactStatus
+
 
 # API Routes
 @api_router.get("/")
