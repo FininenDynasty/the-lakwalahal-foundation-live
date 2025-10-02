@@ -3,12 +3,11 @@
   "name": "lakwalahal-foundation",
   "builds": [
     {
-      "src": "frontend/build/index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "frontend/build/**",
-      "use": "@vercel/static"
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
     }
   ],
   "routes": [
