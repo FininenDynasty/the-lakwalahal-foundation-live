@@ -1,87 +1,85 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# IDE and editors
-.idea/
-.vscode/
-
-# Dependencies
+# ==============================
+# Node & Dependencies
+# ==============================
 node_modules/
-/node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# Testing
-/coverage
-
-# Next.js
-/.next/
-/out/
-next-env.d.ts
-*.tsbuildinfo
-
-# Production builds
-/build
-dist/
-dist
-
-# Environment files (comprehensive coverage)
-
-*token.json*
-*credentials.json*
-
-# Logs and debug files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-dump.rdb
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-store/
 
-# System files
-.DS_Store
-*.pem
+# ==============================
+# Build & Output
+# ==============================
+# Next.js
+.next/
+out/
+# React / CRA
+build/
+dist/
+# Vercel deployment folder
+.vercel/
 
-# Python
-__pycache__/
-*pyc*
-venv/
-.venv/
+# ==============================
+# Environment & Secrets
+# ==============================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Development tools
-chainlit.md
-.chainlit
-.ipynb_checkpoints/
-.ac
-
-# Deployment
-.vercel
-
-# Data and databases
-agenthub/agents/youtube/db
-
-# Archive files and large assets
-**/*.zip
-**/*.tar.gz
-**/*.tar
-**/*.tgz
-*.pack
-*.deb
-*.dylib
-
-# Build caches
+# ==============================
+# Cache & Logs
+# ==============================
+logs/
+*.log
 .cache/
+.next/cache/
+npm-cache/
+coverage/
+*.lcov
 
-# Mobile development
-android-sdk/ -e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
+# ==============================
+# System & Editor Files
+# ==============================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+*.old
+
+# ==============================
+# Test Output & Debug Files
+# ==============================
+jest-test-results.json
+test-results.xml
+cypress/videos/
+cypress/screenshots/
+
+# ==============================
+# Famous.ai Generated Assets
+# ==============================
+.famous/
+famous_exports/
+famous_temp/
+famous_cache/
+famous_ai_output/
+
+# ==============================
+# Local Config or Personal Files
+# ==============================
+*.local
+*.secret
+*.key
+*.pem
+*.crt
+*.csr
+.envrc
