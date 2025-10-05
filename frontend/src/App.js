@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { VaulProvider } from "vaul";
 
+// Components
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -18,45 +19,57 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsOfService from "./components/TermsOfService";
 import SEO from "./components/SEO";
 import GoogleAnalytics from "./components/GoogleAnalytics";
-import MyDrawer from "./components/ui/MyDrawer";
+import MyDrawer from "./components/MyDrawer";
 
-const Home = () => (
-  <div className="min-h-screen bg-white">
-    <SEO />
-    <Header />
-    <Hero />
-    <About />
-    <Programs />
-    <Team />
-    <Impact />
-    <Donation />
-    <Events />
-    <Contact />
-    <Footer />
+function Home() {
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-    {/* Optional Drawer anywhere */}
-    <MyDrawer>
-      <p>Put extra content here!</p>
-    </MyDrawer>
-  </div>
-);
-
-function App() {
   return (
-    <HelmetProvider>
-      <VaulProvider>
-        <BrowserRouter>
-          <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms" element={<TermsOfService />} />
-          </Routes>
-        </BrowserRouter>
-      </VaulProvider>
-    </HelmetProvider>
+    <div className="min-h-screen bg-white">
+      <SEO />
+      <Header />
+      <button
+        onClick={() => setDrawerOpen(true)}
+        className="fixed top-4 right-4 px-4 py-2 bg-blue-600 text-white rounded"
+      >
+        Menu
+      </button>
+      <MyDrawer isOpen={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
+        <nav className="flex flex-col gap-2">
+          <a href="#about" className="text-blue-600">About</a>
+          <a href="#programs" className="text-blue-600">Programs</a>
+          <a href="#team" className="text-blue-600">Team</a>
+          <a href="#impact" className="text-blue-600">Impact</a>
+          <a href="#donation" className="text-blue-600">Donate</a>
+          <a href="#events" className="text-blue-600">Events</a>
+          <a href="#contact" className="text-blue-600">Contact</a>
+        </nav>
+      </MyDrawer>
+      <Hero />
+      <About />
+      <Programs />
+      <Team />
+      <Impact />
+      <Donation />
+      <Events />
+      <Contact />
+      <Footer />
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <HelmetProvider>
+      <BrowserRouter>
+        <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+        </Routes>
+      </BrowserRouter>
+    </HelmetProvider>
+  );
+}
