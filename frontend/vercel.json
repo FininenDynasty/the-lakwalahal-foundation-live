@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "name": "lakwalahal-foundation",
-  "buildCommand": "npm install && npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "build",
   "framework": null,
   "routes": [
