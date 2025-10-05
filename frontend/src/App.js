@@ -1,7 +1,8 @@
 import React from "react";
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { VaulProvider } from "vaul";
+
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -17,38 +18,33 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsOfService from "./components/TermsOfService";
 import SEO from "./components/SEO";
 import GoogleAnalytics from "./components/GoogleAnalytics";
-
-// Import MyDrawer
 import MyDrawer from "./components/ui/MyDrawer";
 
-const Home = () => {
-  return (
-    <div className="min-h-screen bg-white">
-      <SEO />
-      <Header />
-      <Hero />
+const Home = () => (
+  <div className="min-h-screen bg-white">
+    <SEO />
+    <Header />
+    <Hero />
+    <About />
+    <Programs />
+    <Team />
+    <Impact />
+    <Donation />
+    <Events />
+    <Contact />
+    <Footer />
 
-      {/* MyDrawer trigger */}
-      <div className="my-6">
-        <MyDrawer />
-      </div>
-
-      <About />
-      <Programs />
-      <Team />
-      <Impact />
-      <Donation />
-      <Events />
-      <Contact />
-      <Footer />
-    </div>
-  );
-};
+    {/* Optional Drawer anywhere */}
+    <MyDrawer>
+      <p>Put extra content here!</p>
+    </MyDrawer>
+  </div>
+);
 
 function App() {
   return (
     <HelmetProvider>
-      <div className="App">
+      <VaulProvider>
         <BrowserRouter>
           <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
           <Routes>
@@ -58,7 +54,7 @@ function App() {
             <Route path="/terms" element={<TermsOfService />} />
           </Routes>
         </BrowserRouter>
-      </div>
+      </VaulProvider>
     </HelmetProvider>
   );
 }
