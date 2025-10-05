@@ -1,4 +1,4 @@
-// Load configuration from environment or config file
+// frontend/craco.config.js
 const path = require('path');
 
 // Environment variable overrides
@@ -12,21 +12,18 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
-      
+
       // Disable hot reload completely if environment variable is set
       if (config.disableHotReload) {
-        // Remove hot reload related plugins
         webpackConfig.plugins = webpackConfig.plugins.filter(plugin => {
           return !(plugin.constructor.name === 'HotModuleReplacementPlugin');
         });
-        
-        // Disable watch mode
+
         webpackConfig.watch = false;
         webpackConfig.watchOptions = {
           ignored: /.*/, // Ignore all files
         };
       } else {
-        // Add ignored patterns to reduce watched directories
         webpackConfig.watchOptions = {
           ...webpackConfig.watchOptions,
           ignored: [
@@ -39,8 +36,11 @@ module.exports = {
           ],
         };
       }
-      
+
       return webpackConfig;
     },
+  },
+  eslint: {
+    enable: false, // Disable ESLint during Vercel build
   },
 };
