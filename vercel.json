@@ -1,20 +1,18 @@
 {
   "version": 2,
-  "name": "lakwalahal-foundation",
   "builds": [
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "frontend/build",
-        "buildCommand": "npm install --legacy-peer-deps && npm run build"
+        "distDir": "frontend/build"
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/frontend/build/index.html"
     }
   ]
 }
