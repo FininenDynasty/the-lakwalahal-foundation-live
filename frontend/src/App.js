@@ -1,8 +1,7 @@
-import MyDrawer from "./components/ui/MyDrawer";
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from "react-helmet-async";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -19,12 +18,21 @@ import TermsOfService from "./components/TermsOfService";
 import SEO from "./components/SEO";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 
+// Import MyDrawer
+import MyDrawer from "./components/ui/MyDrawer";
+
 const Home = () => {
   return (
     <div className="min-h-screen bg-white">
       <SEO />
       <Header />
       <Hero />
+
+      {/* MyDrawer trigger */}
+      <div className="my-6">
+        <MyDrawer />
+      </div>
+
       <About />
       <Programs />
       <Team />
