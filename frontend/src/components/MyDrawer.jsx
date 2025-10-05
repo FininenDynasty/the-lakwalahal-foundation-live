@@ -1,21 +1,19 @@
 import React from "react";
-import { Dialog } from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { Drawer } from "vaul";
 
-const MyDrawer = ({ open, setOpen, children }) => {
+const MyDrawer = ({ isOpen, onClose, children }) => {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-      <Dialog.Content className="fixed right-0 top-0 h-full w-80 bg-white shadow-lg p-4 overflow-auto">
+    <Drawer open={isOpen} onOpenChange={onClose}>
+      <Drawer.Content className="fixed right-0 top-0 h-full w-80 bg-white shadow-lg p-4 overflow-auto">
         <button
-          className="absolute top-4 right-4"
-          onClick={() => setOpen(false)}
+          onClick={onClose}
+          className="absolute top-4 right-4 px-2 py-1 bg-red-500 text-white rounded"
         >
-          <X size={24} />
+          Close
         </button>
         {children}
-      </Dialog.Content>
-    </Dialog>
+      </Drawer.Content>
+    </Drawer>
   );
 };
 
