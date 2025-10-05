@@ -54,9 +54,11 @@
     "eslint-plugin-react": "7.37.4"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build --no-eslint",
-    "test": "craco test"
+  "start": "react-scripts start",
+  "build": "craco build --no-eslint",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject"
+}
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
