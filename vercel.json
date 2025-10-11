@@ -7,6 +7,6 @@
     }
   ],
   "buildCommand": "npm run build --prefix frontend",
-  "outputDirectory": "frontend/dist",
+  "outputDirectory": "frontend/build",
   "framework": null
 }
